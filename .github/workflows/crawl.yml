@@ -1,0 +1,47 @@
+name: FB Group Scraper
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      trigger_source:
+        description: "Trigger source (manual or discord)"
+        required: false
+        default: "manual"
+
+concurrency:
+  group: fb-scraper-crawl
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.58.0-noble
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Python dependencies
+        run: python -m pip install --no-cache-dir -r requirements-crawler.txt
+
+      - name: Run single cloud patrol
+        env:
+          PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          TARGET_GROUPS: ${{ secrets.TARGET_GROUPS }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_KV_NAMESPACE_ID: ${{ secrets.CF_KV_NAMESPACE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          FB_EMAIL: ${{ secrets.FB_EMAIL }}
+          FB_PASSWORD: ${{ secrets.FB_PASSWORD }}
+          SCROLL_COUNT: ${{ secrets.SCROLL_COUNT || '2' }}
+          CLOUD_JITTER_MAX_SECONDS: ${{ secrets.CLOUD_JITTER_MAX_SECONDS || '300' }}
+          AUTO_RELOGIN_COOLDOWN_MINUTES: "360"
+          AUTH_ALERT_COOLDOWN_MINUTES: "360"
+          TRIGGER_SOURCE: ${{ github.event_name == 'schedule' && 'schedule' || github.event.inputs.trigger_source || 'manual' }}
+        run: python crawl_once.py

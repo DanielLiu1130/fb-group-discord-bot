@@ -1,0 +1,28 @@
+# 環境變數與機密設定（絕對不可提交到 Git）
+.env
+deploy.env
+cf_deploy.env
+*.pem
+*.key
+
+# Facebook 登入憑證與執行期資料
+fb_session.json
+cookies.json
+cookies.json.txt
+subscriptions.json
+notified_posts.json
+
+# Python 與虛擬環境
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.log
+
+# Node / Wrangler 本機暫存
+node_modules/
+.wrangler/
+
+# 作業系統暫存檔
+.DS_Store
+Thumbs.db

@@ -1,0 +1,13 @@
+name = "fb-discord-bot-worker"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[[kv_namespaces]]
+binding = "BOT_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+[vars]
+GITHUB_OWNER = "REPLACE_WITH_YOUR_GITHUB_USERNAME"
+GITHUB_REPO = "REPLACE_WITH_YOUR_GITHUB_REPO_NAME"
+GITHUB_WORKFLOW_FILE = "crawl.yml"
+GITHUB_REF = "main"
